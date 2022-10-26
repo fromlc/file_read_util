@@ -127,7 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\app.cpp" />
     <ClCompile Include="source\file_read_util.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\file_read_util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

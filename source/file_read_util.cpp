@@ -1,6 +1,8 @@
 //------------------------------------------------------------------------------
 // file_read_util.cpp
 //
+// Read file data as lines and as one string
+// 
 // Handles file open and read errors using exceptions
 //
 // References: 
@@ -8,69 +10,21 @@
 //      http://www.cplusplus.com/reference/istream/istream/get/
 //
 //------------------------------------------------------------------------------
-#include <iostream>     // cerr, cout, string
-#include <fstream>      // ifstream
-
-//------------------------------------------------------------------------------
-// using symbols
-//------------------------------------------------------------------------------
-using std::cerr;
-using std::cout;
-using std::ifstream;
-using std::string;
-
-//------------------------------------------------------------------------------
-// constants
-//------------------------------------------------------------------------------
-constexpr int ERROR_FILE_OPEN   = -1;
-constexpr int ERROR_FILE_IO     = -2;
-constexpr int ERROR_BAD_FORMAT  = -3;
+#include "file_read_util.h"
 
 //------------------------------------------------------------------------------
 // globals
 //------------------------------------------------------------------------------
-const string g_fName = "test.txt";
 ifstream g_file;
 string g_data;
 
 //------------------------------------------------------------------------------
-// local function prototypes
+// returns false on file open error 
+// exitApp is optional parameter, by default exits app on error
 //------------------------------------------------------------------------------
-void openDataFile();
-bool getFileData();
-void errorExit(const string& str, int errorCode);
+bool openDataFile(bool exitApp) {
 
-//------------------------------------------------------------------------------
-// entry point
-//------------------------------------------------------------------------------
-int main() {
-
-    openDataFile();
-
-    // read lines from file
-    int lineNum = 0;
-
-    while (getFileData()) {
-
-        cout << "Line " << ++lineNum << ": " << g_data << "\n";
-    } 
-
-    cout << '\n' << lineNum << " lines read from file\n";
-
-    g_file.close();
-    cout << "\nClosed " + g_fName + "\n\n";
-
-    system("pause");
-
-    return 0;
-}
-
-//------------------------------------------------------------------------------
-// exits on file open error
-//------------------------------------------------------------------------------
-void openDataFile() {
-
-    // register the exceptions we want to handle
+    // register exceptions to handle in catch blocks
     g_file.exceptions(ifstream::failbit | ifstream::badbit);
 
     try {
@@ -78,17 +32,23 @@ void openDataFile() {
     }
     // File may not exist, or another problem 
     catch (ifstream::failure e) {
-        errorExit("could not open file", ERROR_FILE_OPEN);
+        if (exitApp) {
+            errorExit(ERROR_FILE_OPEN);
+        }
+        return false;
     }
 
-    cout << "Opened " << g_fName << "\n\n";
+    return true;
 }
 
 //------------------------------------------------------------------------------
 // read one line from file into string parameter
+// exitApp is optional parameter, by default exits app on error
 //------------------------------------------------------------------------------
-bool getFileData() {
-    
+bool getFileData(int& errorID, bool exitApp) {
+
+    errorID = ERROR_FILE_OK;
+
     try {
         g_file >> g_data;
     }
@@ -97,13 +57,20 @@ bool getFileData() {
         if (g_file.eof())
             return false;
 
-        // exit app on i/o err 
-        if (g_file.bad())
-            errorExit("I/O error", ERROR_FILE_IO);
-
+        // file read error
+        if (g_file.bad()) {
+            errorID = ERROR_FILE_IO;
+        }
         // exit app on logical read error like data type mismatch
-        else if (g_file.fail())
-            errorExit("Data type mismatch reading from file", ERROR_BAD_FORMAT);
+        else if (g_file.fail()) {
+            errorID = ERROR_DATA_TYPE;
+        }
+
+        if (exitApp) {
+            errorExit(errorID);
+        }
+
+        return false;
     }
 
     return true;
@@ -112,11 +79,29 @@ bool getFileData() {
 //------------------------------------------------------------------------------
 // display error message and exit application
 //------------------------------------------------------------------------------
-void errorExit(const string& str, int errorCode) {
-    cerr << '\n' << g_fName << ": " << str << '\n';
-    cerr << "Exiting application\n\n";
+void errorExit(int errorCode) {
 
-    system("pause");
+    string errorText;
+
+    switch (errorCode) {
+    case ERROR_FILE_OK:
+        errorText = g_errorFileOK;
+        break;
+    case ERROR_FILE_OPEN:
+        errorText = g_errorFileOpen;
+        break;
+    case ERROR_FILE_IO:
+        errorText = g_errorFileIO;
+        break;
+    case ERROR_DATA_TYPE:
+        errorText = g_errorFileData;
+        break;
+    default:
+        errorText = g_errorFileUnk;
+    }
+
+    cerr << '\n' << g_fName << ": " << errorText << '\n';
+    cerr << "Exiting application\n\n";
 
     exit(errorCode);
 }

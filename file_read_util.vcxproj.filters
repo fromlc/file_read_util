@@ -18,5 +18,13 @@
     <ClCompile Include="source\file_read_util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\app.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\file_read_util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
