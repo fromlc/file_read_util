@@ -1,0 +1,7 @@
+Debug/
+file_io_error_check.sln
+file_io_error_check.vcxproj
+file_io_error_check.vcxproj.filters
+file_io_error_check.vcxproj.user
+source/
+test.txt
