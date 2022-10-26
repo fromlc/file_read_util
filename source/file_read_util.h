@@ -28,6 +28,7 @@ constexpr int ERROR_FILE_OK	  = 0;
 constexpr int ERROR_FILE_OPEN = -1;
 constexpr int ERROR_FILE_IO   = -2;
 constexpr int ERROR_DATA_TYPE = -3;
+constexpr int ERROR_UNKNOWN	  = -4;
 
 //------------------------------------------------------------------------------
 // globals

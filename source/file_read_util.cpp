@@ -17,6 +17,11 @@
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
+// local function prototypes
+//------------------------------------------------------------------------------
+int catchBlock(ifstream& ifs);
+
+//------------------------------------------------------------------------------
 // returns false on file open error 
 // exitApp is optional parameter, by default exits app on error
 //------------------------------------------------------------------------------
@@ -49,26 +54,13 @@ bool getFileLine(ifstream& ifs, string& data, int& errorID, bool exitApp) {
         ifs >> data;
     }
     catch (ifstream::failure e) {
-        // first check for end of file (sets failbit)
-        if (ifs.eof())
-            return false;
+        errorID = catchBlock(ifs);
 
-        // file read error
-        if (ifs.bad()) {
-            errorID = ERROR_FILE_IO;
-        }
-        // exit app on logical read error like data type mismatch
-        else if (ifs.fail()) {
-            errorID = ERROR_DATA_TYPE;
-        }
-
-        if (exitApp) {
+        if (errorID != ERROR_FILE_OK && exitApp) {
             errorExit(errorID);
         }
-
         return false;
     }
-
     return true;
 }
 
@@ -76,6 +68,7 @@ bool getFileLine(ifstream& ifs, string& data, int& errorID, bool exitApp) {
 // stream file data of passed type into passed vector
 // exitApp is optional parameter, by default exits app on error
 //----------------------------------------------------------------------
+// #TODO
 //template <class T>
 //bool getFileDataVector(vector<T>& vData, bool exitApp) {
 bool getFileDataVector(const string& fName, vector<string>& vData, bool exitApp) {
@@ -96,6 +89,27 @@ bool getFileDataVector(const string& fName, vector<string>& vData, bool exitApp)
     ifs.close();
 
     return true;
+}
+
+//------------------------------------------------------------------------------
+// common catch block code
+//------------------------------------------------------------------------------
+int catchBlock(ifstream& ifs) {
+
+    // first check for end of file (sets failbit)
+    if (ifs.eof())
+        return ERROR_FILE_OK;
+
+    // file read error
+    if (ifs.bad()) {
+        return ERROR_FILE_IO;
+    }
+    // exit app on logical read error like data type mismatch
+    if (ifs.fail()) {
+        return ERROR_DATA_TYPE;
+    }
+
+    return ERROR_UNKNOWN;
 }
 
 //------------------------------------------------------------------------------

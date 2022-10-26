@@ -43,7 +43,7 @@ int main() {
     //cout << "\nClosed " + g_fName + '\n';
 
     // reopen for read
-    cout << "\nReading " + g_fName + " into vector\n\n";
+    //cout << "\nReading " + g_fName + " into vector\n";
 
     // data buckets
     vector<string> vData;
