@@ -6,6 +6,7 @@
 
 #include <iostream>     // cerr, cout, string
 #include <fstream>      // ifstream
+#include <vector>		// for getFileDataVector()
 
 //------------------------------------------------------------------------------
 // using symbols
@@ -14,6 +15,7 @@ using std::cerr;
 using std::cout;
 using std::ifstream;
 using std::string;
+using std::vector;
 
 //------------------------------------------------------------------------------
 // constants
@@ -37,18 +39,15 @@ const string g_errorFileIO = "file read error";
 const string g_errorFileData = "file data type mismatch";
 const string g_errorFileUnk = "unknown error";
 
-// file name, input stream, string data buffer
-const string g_fName = "test.txt";
-extern ifstream g_file;
-extern string g_data;
-
 //------------------------------------------------------------------------------
 // function prototypes
 //------------------------------------------------------------------------------
 // exits app by default
-bool openDataFile(bool exitApp = true);
+bool openDataFile(ifstream& ifs, const string& fName, bool exitApp = true);
 // exits app by default
-bool getFileData(int& errorID, bool exitApp = true);
+bool getFileLine(ifstream& ifs, string& data, int& errorID, bool exitApp = true);
+// exits app by default
+bool getFileDataVector(const string& fName, vector<string>& vData, bool exitApp = true);
 void errorExit(int errorCode);
 
 #endif // !FILE_READ_UTIL_H
