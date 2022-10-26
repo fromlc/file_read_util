@@ -1,8 +1,7 @@
 //------------------------------------------------------------------------------
-// file_io_error_check_1.cpp
+// file_read_util.cpp
 //
-// This program handles file open and read errors
-// using exceptions
+// Handles file open and read errors using exceptions
 //
 // References: 
 //      http://www.cplusplus.com/doc/tutorial/files/
