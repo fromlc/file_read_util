@@ -48,7 +48,7 @@ int main() {
 
     openDataFile();
 
-    // read a line from file
+    // read lines from file
     int lineNum = 0;
 
     while (getFileData()) {
