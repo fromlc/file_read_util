@@ -8,7 +8,6 @@
 //      http://www.cplusplus.com/reference/istream/istream/get/
 //
 //------------------------------------------------------------------------------
-
 #include <iostream>     // cerr, cout, string
 #include <fstream>      // ifstream
 
@@ -28,18 +27,18 @@ constexpr int ERROR_FILE_IO     = -2;
 constexpr int ERROR_BAD_FORMAT  = -3;
 
 //------------------------------------------------------------------------------
-// local function prototypes
-//------------------------------------------------------------------------------
-void openDataFile();
-bool getFileData();
-void errorExit(const string& str, int errorCode);
-
-//------------------------------------------------------------------------------
 // globals
 //------------------------------------------------------------------------------
 const string g_fName = "test.txt";
 ifstream g_file;
 string g_data;
+
+//------------------------------------------------------------------------------
+// local function prototypes
+//------------------------------------------------------------------------------
+void openDataFile();
+bool getFileData();
+void errorExit(const string& str, int errorCode);
 
 //------------------------------------------------------------------------------
 // entry point
