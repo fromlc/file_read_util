@@ -19,7 +19,7 @@
 //------------------------------------------------------------------------------
 // local function prototypes
 //------------------------------------------------------------------------------
-int catchBlock(ifstream& ifs);
+int getErrorCode(ifstream& ifs);
 
 //------------------------------------------------------------------------------
 // returns false on file open error 
@@ -49,12 +49,11 @@ bool openDataFile(ifstream& ifs, const string& fName, bool exitApp) {
 // exitApp is optional parameter, by default exits app on error
 //------------------------------------------------------------------------------
 bool getFileLine(ifstream& ifs, string& data, int& errorID, bool exitApp) {
-
     try {
-        ifs >> data;
+        getline(ifs, data);
     }
     catch (ifstream::failure e) {
-        errorID = catchBlock(ifs);
+        errorID = getErrorCode(ifs);
 
         if (errorID != ERROR_FILE_OK && exitApp) {
             errorExit(errorID);
@@ -65,13 +64,44 @@ bool getFileLine(ifstream& ifs, string& data, int& errorID, bool exitApp) {
 }
 
 //----------------------------------------------------------------------
+// stream file lines into passed vector
+// exitApp is optional parameter, by default exits app on error
+// returns true on success, false on failure
+//----------------------------------------------------------------------
+bool getFileLineVector(const string& fName, vector<string>& vData, 
+                        bool exitApp) {
+    ifstream ifs(fName);
+
+    if (!ifs.is_open()) {
+        if (exitApp) {
+            errorExit(ERROR_FILE_OPEN);
+        }
+        return false;
+    }
+
+    // stop on eof or any error
+    while (ifs.good()) {
+        string line;
+        getline(ifs, line);
+
+        vData.push_back(line);
+    }
+
+    // grab eof bit before trying to close file
+    bool retVal = ifs.eof();
+
+    // try closing the file regardless of error
+    ifs.close();
+
+    return retVal;
+}
+
+//----------------------------------------------------------------------
 // stream file data of passed type into passed vector
 // exitApp is optional parameter, by default exits app on error
 //----------------------------------------------------------------------
-// #TODO
-//template <class T>
-//bool getFileDataVector(vector<T>& vData, bool exitApp) {
-bool getFileDataVector(const string& fName, vector<string>& vData, bool exitApp) {
+bool getFileWordVector(const string& fName, vector<string>& vData,
+                        bool exitApp) {
     ifstream ifs(fName);
     
     if (!ifs.is_open()) {
@@ -81,7 +111,6 @@ bool getFileDataVector(const string& fName, vector<string>& vData, bool exitApp)
         return false;
     }
 
-//    T dataItem{};
     string dataItem{};
     while (ifs >> dataItem)
         vData.push_back(dataItem);
@@ -94,7 +123,7 @@ bool getFileDataVector(const string& fName, vector<string>& vData, bool exitApp)
 //------------------------------------------------------------------------------
 // common catch block code
 //------------------------------------------------------------------------------
-int catchBlock(ifstream& ifs) {
+int getErrorCode(ifstream& ifs) {
 
     // first check for end of file (sets failbit)
     if (ifs.eof())

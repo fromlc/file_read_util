@@ -6,6 +6,7 @@
 
 #include <iostream>     // cerr, cout, string
 #include <fstream>      // ifstream
+#include <string>		// for some file reads
 #include <vector>		// for getFileDataVector()
 
 //------------------------------------------------------------------------------
@@ -44,11 +45,20 @@ const string g_errorFileUnk = "unknown error";
 // function prototypes
 //------------------------------------------------------------------------------
 // exits app by default
-bool openDataFile(ifstream& ifs, const string& fName, bool exitApp = true);
+bool openDataFile(ifstream& ifs, const string& fName,
+        bool exitApp = true);
 // exits app by default
-bool getFileLine(ifstream& ifs, string& data, int& errorID, bool exitApp = true);
+bool getFileWord(ifstream& ifs, string& data, int& errorID,
+        bool exitApp = true);
 // exits app by default
-bool getFileDataVector(const string& fName, vector<string>& vData, bool exitApp = true);
+bool getFileLine(ifstream& ifs, string& data, int& errorID, 
+        bool exitApp = true);
+// exits app by default
+bool getFileLineVector(const string& fName, vector<string>& vData, 
+        bool exitApp = true);
+bool getFileWordVector(const string& fName, vector<string>& vData,
+    bool exitApp = true);
+
 void errorExit(int errorCode);
 
 #endif // !FILE_READ_UTIL_H
