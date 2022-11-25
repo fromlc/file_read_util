@@ -1,12 +1,7 @@
 //------------------------------------------------------------------------------
-// file_read_util.cpp
+// app.cpp
 //
-// Handles file open and read errors using exceptions
-//
-// References: 
-//      http://www.cplusplus.com/doc/tutorial/files/
-//      http://www.cplusplus.com/reference/istream/istream/get/
-//
+// Demos file_read_util functions
 //------------------------------------------------------------------------------
 #include "file_read_util.h"		// #includes needed system header files
 using std::cin;
