@@ -8,59 +8,75 @@
 //      http://www.cplusplus.com/reference/istream/istream/get/
 //
 //------------------------------------------------------------------------------
-#include "file_read_util.h"
+#include "file_read_util.h"		// #includes needed system header files
+using std::cin;
 
 //------------------------------------------------------------------------------
 // globals
 //------------------------------------------------------------------------------
+// this file goes in your VS project folder
 const string g_fName = "test.txt";
+
+//------------------------------------------------------------------------------
+// local function prototypes
+//------------------------------------------------------------------------------
+inline void displayVectorItems(vector<string>& vData, const string& msg);
 
 //------------------------------------------------------------------------------
 // entry point
 //------------------------------------------------------------------------------
 int main() {
-    // file data buffer
-    string data;
+	// file data buffer
+	string data;
 
-    // exits app on file open error
-    ifstream ifs;
-    openDataFile(ifs, g_fName);
-    //cout << "\nOpened " + g_fName + "\n\n";
-    cout << '\n' + g_fName << '\n';
+	ifstream ifs;
+	// ignore return value, instead exit app on file open error
+	openDataFile(ifs, g_fName);
+	cout << '\n' + g_fName << '\n';
 
-    // read lines from file
-    int lineNum = 0;
-    int errorCode;
+	// read lines from file
+	int lineNum = 0;
+	int errorCode;
 
-    while (getFileLine(ifs, data, errorCode)) {
+	// display file lines
+	while (getFileLine(ifs, data, errorCode)) {
 
-        cout << "Line " << ++lineNum << ": " << data << "\n";
-    } 
+		cout << "Line " << ++lineNum << ": " << data << "\n";
+	}
+	cout << '\n' << lineNum << " lines read from file " + g_fName + '\n';
 
-    cout << '\n' << lineNum << " lines read from file " + g_fName + '\n';
+	// we opened the file so we must close it
+	ifs.close();
+	cout << "\nClosed " + g_fName + '\n';
 
-    ifs.close();
-    //cout << "\nClosed " + g_fName + '\n';
+	// vector for file words
+	vector<string> vWordData;
 
-    // reopen for read
-    //cout << "\nReading " + g_fName + " into vector\n";
+	// fill word vector with file data, error exits app
+	getFileWordVector(g_fName, vWordData);
+	displayVectorItems(vWordData, "word vector");
 
-    // data buckets
-    vector<string> vData;
+	// vector for file lines
+	vector<string> vLineData;
 
-    if (getFileDataVector(g_fName, vData, APP_NOEXIT)) {
-        cout << "\nRead file data into vector\n\n";
+	// fill line vector with file data, error exits app
+	getFileLineVector(g_fName, vLineData);
+	displayVectorItems(vLineData, "line vector");
 
-        for (auto item : vData) {
-            cout << item << '\n';
-        }
-    }
-    else {
-        cout << "\nError reading file data into vector\n";
-    }
+	// wait for user input
+	cin.get();
+	cout << "Goodbye!\n";
 
-    cout << '\n';
-    system("pause");
+	return 0;
+}
 
-    return 0;
+//------------------------------------------------------------------------------
+// loop to display vector elements
+//------------------------------------------------------------------------------
+inline void displayVectorItems(vector<string>& vData, const string& msg) {
+	cout << msg << "\n\n";
+	for (auto item : vData) {
+		cout << item << '\n';
+	}
+	cout << '\n';
 }
